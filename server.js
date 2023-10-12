@@ -1,13 +1,16 @@
-/********************************************************************************** 
- * WEB322 – Assignment 2
- * I declare that this assignment is my own work in accordance with Seneca Academic Policy.
- * No part of this assignment has been copied manually or electronically from any other source
- * (including web sites) or distributed to other students.
- * Name: Ashwin Pandey 
- * Student ID: 156027211 
- * Date: 11th October, 2023
- * 
- *********************************************************************************/
+/********************************************************************************
+* WEB322 – Assignment 03
+*
+* I declare that this assignment is my own work in accordance with Seneca's
+* Academic Integrity Policy:
+*
+* https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
+*
+* Name: Ashwin Pandey  Student ID: 156027211  Date: 11th October, 2023
+*
+* Published URL: https://worried-fawn-tux.cyclic.app
+*
+********************************************************************************/
 
 const legoData = require("./modules/legoSets");
 const express = require('express'); 
