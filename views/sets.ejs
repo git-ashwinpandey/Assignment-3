@@ -24,16 +24,14 @@
                     <span class="label-text">Lion Knights</span>
                     <input type="radio" name="lego-type" class="radio" value="Lion Knights" id="Lion Knights" checked />
                 </label>
-                <!-- Add similar labels and radio buttons for other filter options -->
             </div>
         </div>
 
         <script>
-            // Get the selected filter from the query parameter
             const urlParams = new URLSearchParams(window.location.search);
             const selectedFilter = urlParams.get('theme') || 'All';
 
-            // Set the checked state of the radio buttons based on the selected filter
+            // Set the checked state of the radio buttons
             if (selectedFilter === 'All') {
                 document.getElementById('allRadio').checked = true;
             } else if (selectedFilter === 'Technic') {
@@ -45,11 +43,10 @@
                 document.getElementById('technicRadio').checked = false;
                 document.getElementById('Lion Knights').checked = false;
             }
-            // Add similar checks for other radio buttons
 
             // Add change event listeners as before to handle filter updates
             document.getElementById('allRadio').addEventListener('change', function () {
-                // Update the URL and apply the filter
+               
                 const selectedFilter = 'All';
                 window.location.href = `/lego/sets`;
             });
@@ -65,8 +62,6 @@
                 const selectedFilter = 'Lion Knights';
                 window.location.href = `/lego/sets?theme=${selectedFilter}`;
             });
-
-            // Add similar listeners for other radio buttons
         </script>
 
         <div class="overflow-x-auto">
@@ -85,7 +80,7 @@
 
                 <% sets.forEach(set=> { %>
                     <% if (selectedFilter==='All' || set.theme===selectedFilter) { %>
-                        <!-- Render the set details -->
+                        <!-- set details -->
                         <tr>
                             <td>
                                 <div class="flex items-center space-x-3">
@@ -121,8 +116,5 @@
                             <% }) %>
             </table>
         </div>
-
-
-
 </body>
 </html>
