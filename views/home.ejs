@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/css/main.css" />
+<html data-theme="light"></html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lego Collection</title>
+</head>
+<body>
+  <%- include('partials/navbar', {page: '/home' }) %>
+
+    <div class="container mx-auto p-4">
+
+      <div class="hero bg-base-200">
+        <div class="hero-content flex-col lg:flex-row-reverse">
+          <img src="https://assets.lego.com/logos/v4.5.0/brand-lego.svg"
+            class="max-w-sm rounded-lg shadow-2xl flex-initial w-64" />
+          <div class="flex-1 w-128">
+            <h1 class="text-5xl font-bold">Only the best is good enough</h1>
+            <p class="py-6">
+              Explore the world of LEGO® through games, videos, products and
+              more! Shop awesome LEGO® building toys and brick sets and find the
+              perfect gift for your kid.
+            </p>
+            <a href="/lego/sets">
+              <button class="btn btn-primary">Get Started</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <br /><br /><br />
+
+
+      <div class="grid grid-cols-3 gap-6">
+        <div class="card w-96 bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full h-80" src="https://cdn.rebrickable.com/media/sets/001-1.jpg" alt="Shoes" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">001-1</h2>
+            <p>
+              This set was released in America (USA/CAN) by Samsonite in 1965.
+              It was re-released in 1969 as an educational set (322-4). It was
+              never released in Europe.
+            </p>
+            <div class="card-actions justify-end">
+              <a href="/lego/sets/001-1"><button class="btn btn-primary">Buy Now</button></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card w-96 bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full h-80" src="https://cdn.rebrickable.com/media/sets/0011-2.jpg" alt="0011-3" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">0011-2</h2>
+            <p>LEGO SET 0011-2 - Town Mini-Figures</p>
+            <div class="card-actions justify-end">
+              <a href="/lego/sets/0011-2"><button class="btn btn-primary">Buy Now</button></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="card w-96 bg-base-100 shadow-xl">
+          <figure>
+            <img class="w-full h-80" src="https://cdn.rebrickable.com/media/sets/0011-3.jpg" alt="Shoes" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">0011-3</h2>
+            <p>LEGO SET 0011-3 - Castle 2 for 1 Bonus Offer</p>
+            <div class="card-actions justify-end">
+              <a href="/lego/sets/0011-3"><button class="btn btn-primary">Buy Now</button></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</body>
+</html>

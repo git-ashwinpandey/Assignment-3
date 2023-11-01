@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/css/main.css" />
+<html data-theme="light"></html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lego Collection</title>
+</head>
+<body>
+    <%- include('partials/navbar', {page: '/lego/sets' }) %>
+        Theme Filter:
+        <div class="join">
+            <div class="form-control flex flex-row gap-2">
+                <label class="label cursor-pointer">
+                    <span class="label-text">All</span>
+                    <input type="radio" name="lego-type" class="radio" value="All" id="allRadio" checked />
+                </label>
+                <label class="label cursor-pointer">
+                    <span class="label-text">Technic</span>
+                    <input type="radio" name="lego-type" class="radio" value="Technic" id="technicRadio" checked />
+                </label>
+                <label class="label cursor-pointer">
+                    <span class="label-text">Lion Knights</span>
+                    <input type="radio" name="lego-type" class="radio" value="Lion Knights" id="Lion Knights" checked />
+                </label>
+                <!-- Add similar labels and radio buttons for other filter options -->
+            </div>
+        </div>
+
+        <script>
+            // Get the selected filter from the query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedFilter = urlParams.get('theme') || 'All';
+
+            // Set the checked state of the radio buttons based on the selected filter
+            if (selectedFilter === 'All') {
+                document.getElementById('allRadio').checked = true;
+            } else if (selectedFilter === 'Technic') {
+                document.getElementById('technicRadio').checked = true;
+            } else if (selectedFilter === 'Lion Knights') {
+                document.getElementById('Lion Knights').checked = true;
+            } else {
+                document.getElementById('allRadio').checked = false;
+                document.getElementById('technicRadio').checked = false;
+                document.getElementById('Lion Knights').checked = false;
+            }
+            // Add similar checks for other radio buttons
+
+            // Add change event listeners as before to handle filter updates
+            document.getElementById('allRadio').addEventListener('change', function () {
+                // Update the URL and apply the filter
+                const selectedFilter = 'All';
+                window.location.href = `/lego/sets`;
+            });
+
+            document.getElementById('technicRadio').addEventListener('change', function () {
+                // Update the URL and apply the filter
+                const selectedFilter = 'Technic';
+                window.location.href = `/lego/sets?theme=${selectedFilter}`;
+            });
+
+            document.getElementById('Lion Knights').addEventListener('change', function () {
+                // Update the URL and apply the filter
+                const selectedFilter = 'Lion Knights';
+                window.location.href = `/lego/sets?theme=${selectedFilter}`;
+            });
+
+            // Add similar listeners for other radio buttons
+        </script>
+
+        <div class="overflow-x-auto">
+            <table class="table">
+                <!-- head -->
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Year</th>
+                        <th>Theme</th>
+                        <th>Num_Part</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <% sets.forEach(set=> { %>
+                    <% if (selectedFilter==='All' || set.theme===selectedFilter) { %>
+                        <!-- Render the set details -->
+                        <tr>
+                            <td>
+                                <div class="flex items-center space-x-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle w-20 h-20">
+                                            <img src="<%= set.img_url %>" alt="<%= set.name %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <%= set.name %>
+                                    <br />
+                                    <a href="/lego/sets?theme=<%= set.theme %>"><button class="btn btn-ghost btn-xs">
+                                            <%= set.theme %>
+                                        </button></a>
+                            <td>
+                                <%= set.year %>
+                            </td>
+                            </td>
+                            <td>
+                                <%= set.theme %>
+                            </td>
+                            <td>
+                                <%= set.num_parts %>
+                            </td>
+                            <th>
+                                <a href="/lego/sets/<%= set.set_num %>"><button class="btn btn-ghost btn-xs">More
+                                        Info</button></a>
+                            </th>
+                        </tr>
+                        <% } %>
+                            <% }) %>
+            </table>
+        </div>
+
+
+
+</body>
+</html>
