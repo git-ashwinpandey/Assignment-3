@@ -24,14 +24,16 @@
                     <span class="label-text">Lion Knights</span>
                     <input type="radio" name="lego-type" class="radio" value="Lion Knights" id="Lion Knights" checked />
                 </label>
+                <!-- Add similar labels and radio buttons for other filter options -->
             </div>
         </div>
 
         <script>
+            // Get the selected filter from the query parameter
             const urlParams = new URLSearchParams(window.location.search);
             const selectedFilter = urlParams.get('theme') || 'All';
 
-            // Set the checked state of the radio buttons
+            // Set the checked state of the radio buttons based on the selected filter
             if (selectedFilter === 'All') {
                 document.getElementById('allRadio').checked = true;
             } else if (selectedFilter === 'Technic') {
@@ -43,10 +45,11 @@
                 document.getElementById('technicRadio').checked = false;
                 document.getElementById('Lion Knights').checked = false;
             }
+            // Add similar checks for other radio buttons
 
             // Add change event listeners as before to handle filter updates
             document.getElementById('allRadio').addEventListener('change', function () {
-               
+                // Update the URL and apply the filter
                 const selectedFilter = 'All';
                 window.location.href = `/lego/sets`;
             });
@@ -62,6 +65,8 @@
                 const selectedFilter = 'Lion Knights';
                 window.location.href = `/lego/sets?theme=${selectedFilter}`;
             });
+
+            // Add similar listeners for other radio buttons
         </script>
 
         <div class="overflow-x-auto">
@@ -75,12 +80,14 @@
                         <th>Theme</th>
                         <th>Num_Part</th>
                         <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
 
                 <% sets.forEach(set=> { %>
-                    <% if (selectedFilter==='All' || set.theme===selectedFilter) { %>
-                        <!-- set details -->
+                    <% if (selectedFilter==='All' || set.Theme.name===selectedFilter) { %>
+                        <!-- Render the set details -->
                         <tr>
                             <td>
                                 <div class="flex items-center space-x-3">
@@ -94,27 +101,35 @@
                             <td>
                                 <%= set.name %>
                                     <br />
-                                    <a href="/lego/sets?theme=<%= set.theme %>"><button class="btn btn-ghost btn-xs">
-                                            <%= set.theme %>
+                                    <a href="/lego/sets?theme=<%= set.Theme.name %>"><button class="btn btn-ghost btn-xs">
+                                            <%= set.Theme.name %>
                                         </button></a>
                             <td>
                                 <%= set.year %>
                             </td>
                             </td>
                             <td>
-                                <%= set.theme %>
+                                <%= set.Theme.name %>
                             </td>
                             <td>
                                 <%= set.num_parts %>
                             </td>
                             <th>
-                                <a href="/lego/sets/<%= set.set_num %>"><button class="btn btn-ghost btn-xs">More
-                                        Info</button></a>
+                                <a href="/lego/sets/<%= set.set_num %>"><button class="btn btn-info btn-xs">More Info</button></a>
+                            </th>
+                            <th>
+                                <a href="/lego/editSet/<%= set.set_num %>"><button class="btn btn-warning btn-xs">Edit</button></a>
+                            </th>
+                            <th>
+                                <a href="/lego/deleteSet/<%= set.set_num %>"><button class="btn btn-error btn-xs">Delete</button></a>
                             </th>
                         </tr>
                         <% } %>
                             <% }) %>
             </table>
         </div>
+
+
+
 </body>
 </html>

@@ -37,7 +37,7 @@
             <span class="font-bold">Year Released: </span>
             <%= set.year %> <br />
             <span class="font-bold">Theme: </span>
-            <%= set.theme %> <br />
+            <%= set.Theme.name %> <br />
             <span class="font-bold">Number of Parts: </span>
             <%= set.num_parts %> <br /><br />
 
@@ -46,12 +46,8 @@
               -<%= quote.author %></span
             >
             <br /><br />
-            <a
-              class="btn btn-primary btn-sm"
-              href="#"
-              onclick="history.back(); return false;"
-              >RETURN</a
-            >
+            <a class="btn btn-primary btn-sm" href="/lego/editSet/<%= set.set_num %>">Edit</a>
+            <a class="btn btn-primary btn-sm" href="#" onclick="history.back(); return false;">RETURN</a>
           </p>
         </div>
       </div>

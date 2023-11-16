@@ -1,20 +1,42 @@
-const setData = require("../data/setData");
-const themeData = require("../data/themeData");
+require('dotenv').config();
+const Sequelize = require('sequelize');
 
-var sets = [];
+let sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+      ssl: { rejectUnauthorized: false },
+    },
+});
+
+const Set = sequelize.define('Set', {
+    set_num: {
+        type: Sequelize.STRING,
+        primaryKey: true,
+    },
+    name: Sequelize.STRING,
+    year: Sequelize.INTEGER,
+    num_parts: Sequelize.INTEGER,
+    theme_id: Sequelize.INTEGER,
+    img_url: Sequelize.STRING,
+});
+
+const Theme = sequelize.define('Theme', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
+    name: Sequelize.STRING,
+});
+
+Set.belongsTo(Theme, {foreignKey: 'theme_id'});
 
 function initialize() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
-            setData.forEach(element => {
-                let t_sets;
-                let result = themeData.find((theme) => {
-                    return theme.id === element.theme_id;
-                });
-                t_sets = element;
-                t_sets.theme = result.name;
-                sets.push(t_sets);
-            });
+            await sequelize.sync();
             resolve(); 
         } catch (error) {
             reject(error); 
@@ -23,9 +45,12 @@ function initialize() {
 }
 
 function getAllSets() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
-            resolve(sets); 
+            let allSets = await Set.findAll({
+                include: [Theme],
+            });
+            resolve(allSets); 
         } catch (error) {
             reject(error);
         }
@@ -33,34 +58,123 @@ function getAllSets() {
 }
 
 function getSetByNum(setNum) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
-            const result = sets.find((set) => set.set_num === setNum);
-            if (result) {
-                resolve(result); 
-            } else {
-                reject("Unable to find requested set"); 
-            }
+            let sets = await Set.findAll({
+                attributes: ['set_num', 'name', 'year', 'num_parts', 'theme_id', 'img_url'],
+                include: [Theme],
+                where: {
+                    set_num: setNum
+                }
+            });
+            resolve(sets[0]);
         } catch (error) {
-            reject(error);
+            reject("Unable to find requested set"); 
         }
     });
 }
 
 function getSetsByTheme(theme) {
-    return new Promise((resolve, reject) => {
+    return new Promise(async(resolve, reject) => {
         try {
-            const themeLower = theme.toLowerCase();
-            const matchingSets = sets.filter((set) => set.theme.toLowerCase().includes(themeLower));
-            if (matchingSets.length > 0) {
-                resolve(matchingSets); 
-            } else {
-                resolve([]);
-            }
+            let sets = await Set.findAll({include: [Theme], where: {
+                '$Theme.name$': {
+                [Sequelize.Op.iLike]: `%${theme}%`
+                }
+                }});
+            resolve(sets);
+        } catch (error) {
+            reject("Unable to find requested set"); 
+        }
+    });
+}
+
+function getAllThemes() {
+    return new Promise(async(resolve, reject) => {
+        try {
+            let allThemes = await Theme.findAll();
+            resolve(allThemes); 
         } catch (error) {
             reject(error);
         }
     });
 }
 
-module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme };
+function addSet(setData) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Set.create(setData);
+            resolve();
+        } catch (error) {
+            reject(error.errors[0].message);
+        }
+    });
+}
+
+function editSet(set_num, setData) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const existingSet = await Set.findOne({
+                where: { set_num: set_num }
+            });
+            if (existingSet) {
+                await existingSet.update(setData);
+                resolve();
+            } else {
+                reject("Set not found");
+            }
+        } catch (error) {
+            reject(error.errors[0].message);
+        }
+    });
+}
+
+function deleteSet(set_num) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const existingSet = await Set.findOne({
+                where: { set_num: set_num }
+            });
+            if (existingSet) {
+                await existingSet.destroy();
+                resolve();
+            } else {
+                reject("Set not found");
+            }
+        } catch (error) {
+            reject(error.errors[0].message);
+        }
+    });
+}
+
+
+module.exports = { initialize, getAllSets, getSetByNum, getSetsByTheme, getAllThemes, addSet, editSet, deleteSet };
+
+/*
+sequelize
+  .sync()
+  .then( async () => {
+    try{
+      await Theme.bulkCreate(themeData);
+      await Set.bulkCreate(setData); 
+      console.log("-----");
+      console.log("data inserted successfully");
+    }catch(err){
+      console.log("-----");
+      console.log(err.message);
+
+      // NOTE: If you receive the error:
+
+      // insert or update on table "Sets" violates foreign key constraint "Sets_theme_id_fkey"
+
+      // it is because you have a "set" in your collection that has a "theme_id" that does not exist in the "themeData".   
+
+      // To fix this, use PgAdmin to delete the newly created "Themes" and "Sets" tables, fix the error in your .json files and re-run this code
+    }
+
+    process.exit();
+  })
+  .catch((err) => {
+    console.log('Unable to connect to the database:', err);
+  });
+*/

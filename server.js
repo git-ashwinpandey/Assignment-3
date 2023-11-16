@@ -6,7 +6,7 @@
  *
  * https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
  *
- * Name: Ashwin Pandey  Student ID: 156027211  Date: 31st October, 2023
+ * Name: Ashwin Pandey  Student ID: 156027211  Date: 11th October, 2023
  *
  * Published URL: https://worried-fawn-tux.cyclic.app
  *
@@ -23,6 +23,7 @@ const HTTP_PORT = process.env.PORT || 8080;
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.listen(HTTP_PORT, () => console.log(`server listening on: ${HTTP_PORT}`));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
   res.render("home");
@@ -32,7 +33,13 @@ app.get("/lego/sets", async (req, res) => {
   try {
     const selectedFilter = req.query.theme || "All"; // Default to 'All' if no filter is provided
     console.log(selectedFilter);
-    const sets = await legoData.getSetsByTheme(selectedFilter);
+    let sets;
+    if (selectedFilter === "All") {
+      sets = await legoData.getAllSets();
+    } else {
+      sets = await legoData.getSetsByTheme(selectedFilter);
+    }
+    
 
     if (sets.length === 0) {
       // No matching sets, display all sets
@@ -46,6 +53,52 @@ app.get("/lego/sets", async (req, res) => {
     res
       .status(404)
       .render("404", { message: "No Sets found for a matching theme" });
+  }
+});
+
+app.get("/lego/addSet", async(req, res) => {
+  try {
+    const themes = await legoData.getAllThemes();
+    res.render("addSet", { themes: themes });
+  } catch {
+    res.render("500", { message: "Failed to query theme data from Database" });
+  }
+});
+
+app.post("/lego/addSet", async(req, res) => {
+  try {
+    await legoData.addSet(req.body);
+    res.redirect("/lego/sets");
+  } catch(err) {
+    res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+  }
+});
+
+app.get("/lego/editSet/:num", async(req, res) => {
+  try {
+    const getSet = await legoData.getSetByNum(req.params.num);
+    const getThemes = await legoData.getAllThemes();
+    res.render("editSet", { themes: getThemes, set: getSet });
+  } catch (error) {
+    res.status(404).render("404", { message: error });
+  }
+});
+
+app.post("/lego/editSet", async(req, res) => {
+  try {
+    await legoData.editSet(req.body.set_num, req.body);
+    res.redirect("/lego/sets");
+  } catch(err) {
+    res.render("500", { message: `I'm sorry, but we have encountered the following error: ${err}` });
+  }
+});
+
+app.get("/lego/deleteSet/:num", async(req, res) => {
+  try {
+    await legoData.deleteSet(req.params.num);
+    res.redirect("/lego/sets");
+  } catch (error) {
+    res.render("500", { message: `I'm sorry, but we have encountered the following error: ${error}` });
   }
 });
 
