@@ -118,10 +118,14 @@
                                 <a href="/lego/sets/<%= set.set_num %>"><button class="btn btn-info btn-xs">More Info</button></a>
                             </th>
                             <th>
-                                <a href="/lego/editSet/<%= set.set_num %>"><button class="btn btn-warning btn-xs">Edit</button></a>
+                                <% if (session.user) { %>
+                                    <a href="/lego/editSet/<%= set.set_num %>"><button class="btn btn-warning btn-xs">Edit</button></a>
+                                <% } %>
                             </th>
                             <th>
+                                <% if (session.user) { %>
                                 <a href="/lego/deleteSet/<%= set.set_num %>"><button class="btn btn-error btn-xs">Delete</button></a>
+                                <% } %>
                             </th>
                         </tr>
                         <% } %>
