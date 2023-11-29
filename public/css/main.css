@@ -2942,6 +2942,10 @@ html {
   right: 0px;
 }
 
+.z-\[1\] {
+  z-index: 1;
+}
+
 .row-span-2 {
   grid-row: span 2 / span 2;
 }
